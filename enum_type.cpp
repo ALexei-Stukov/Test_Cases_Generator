@@ -23,7 +23,9 @@ void enum_type::generate_test_cases()
         // case_unit.name = this->name;
         // case_list.push_back(case_unit);
 
-        test_case case_unit(*it,name);
+        test_case case_unit(name);
+        case_unit.type = 0; //int类型
+        case_unit.int_value = *it;
         case_list.push_back(case_unit);
     }
 

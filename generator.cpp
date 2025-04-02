@@ -44,13 +44,14 @@ int main(int argc,char**argv)
         }
         else if( line.find("range") != string::npos)
         {
-            enum_type* unit = new enum_type(line);//类型要改
+            range_type* unit = new range_type(line);//类型要改
             all_list.push_back(unit);
+            cout<<"执行1次range type"<<std::endl;
         }
     }
     // 关闭文件
     file.close();
-
+    // exit(0);    //
     cout<<all_list.size()<<std::endl;
 
     // 针对每个输入条目，生成参数列表
@@ -61,7 +62,7 @@ int main(int argc,char**argv)
 
     // 填充进DAG图
     DAG<test_case> graph;
-    test_case root_item(0,"root");
+    test_case root_item("root");
     auto root_node = graph.add_node(root_item);   //添加虚拟的根节点，方便处理。
  
     for(auto it = all_list.begin();it < all_list.end();it++)
@@ -74,7 +75,9 @@ int main(int argc,char**argv)
 
         for(auto case_it = (*it)->case_list.begin();case_it < (*it)->case_list.end();case_it++)
         {
+            // cout<<"the type of tase_case is "<<(*case_it).type<<"\n";
             auto new_node = graph.add_node(*case_it); 
+            // cout<<"the type of node is "<<(new_node->value).type<<"\n";
             for(auto temp_it = temp.begin();temp_it < temp.end();temp_it++)
             {
                 graph.add_edge(*temp_it,new_node);
