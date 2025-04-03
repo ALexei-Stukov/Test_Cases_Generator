@@ -1,34 +1,43 @@
-#ifndef INPUT_TYPE
-#define INPUT_TYPE
+#ifndef BASIC_PARAM
+#define BASIC_PARAM
 
-class test_case{
-public:
-    test_case(string input_str)
-    {
-        name = input_str;
-    }
+class test_param
+{
+public:    
+    int type = 0;   /*
+                        这个值将决定最终打印(print)的参数
+                        0(only Int)
+                        1(only Double)
+                        2(Int or Double by Randomly)
+                        otherwise(nothing can be provide)
+                    */
     size_t int_value = 0;   //int类型的值
-    string name = "no_name";    //测试用例的具体含义。如果为空，则视为无含义。
     double lf_value = 0;    //double类型的值
-    int type = 0;   //测试用例的类型 // 0(only int) 1(only double) 2(both int and double)
 };
 
-class input_type{
+class basic_param
+{
 public:
-    virtual void generate_test_cases()=0;
-    virtual void read_input()=0;
-    vector<test_case> case_list;
-    int value_type; // 0(only int) 1(only double) 2(both int and double)
-    string name;   // 该输入的名称
+    virtual int generate_test_params()=0;
+    virtual void read_line(string str)=0;
+    vector<test_param> param_list;    //当前参数所有可能的值
+    int type;   /*
+                    这个值将决定最终生成(generate)的参数
+                    0(only Int)
+                    1(only Double)
+                    2(Int or Double by Randomly)
+                */
+    string param_name;   // 当前参数的名称
 };
 
-class enum_type:public input_type{
+class enum_type:public basic_param
+{
 public:
     enum_type(string str);
-    void generate_test_cases();
-    void read_input();
+    int generate_test_params();
+    void read_line(string str);
 
-    vector<size_t> input_list;   // 记录所有枚举的可能性
+    vector<size_t> input_list;   // 记录枚举类型的所有可能性
 };
 
 //区间类型
@@ -45,11 +54,12 @@ struct Interval {
     }
 };
 
-class range_type:public input_type{
+class range_type:public basic_param
+{
 public:
     range_type(string str);
-    void generate_test_cases();
-    void read_input();
+    int generate_test_params();
+    void read_line(string str);
 
     string trim(const string &s);   //  辅助解析字符串
     bool parseDouble(const string &s, double &val);

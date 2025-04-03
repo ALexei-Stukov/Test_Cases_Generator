@@ -10,32 +10,21 @@
 #include <cmath>
 #include <limits>
 
-using std::vector;
-using std::string;
-using std::exception;
-using std::cerr;
-using std::cout;
-using std::istringstream;
-using std::endl;
-using namespace std;    //迫不得已
+using namespace std;
 
-#include "input_type.h"
+#include "basic_param.h"
 
-void range_type::generate_test_cases()
+int range_type::generate_test_params()
 {
     //需要逐个处理区间
-    for (auto it = ranges.begin();it < ranges.end();it++)
+    for (auto& it : ranges)
+    // for (auto it = ranges.begin();it < ranges.end();it++)
     {
-        // test_case case_unit;
-        // case_unit.value = *it;
-        // case_unit.name = this->name;
-        // case_list.push_back(case_unit);
-
-        test_case case_unit(name);
-        size_t L_NUMBER = (*it).left_val;   //不是对象，所以要用.
-        size_t R_NUMBER = (*it).right_val;
-        bool L_CLOSE = (*it).left_closed;
-        size_t R_CLOSE = (*it).right_closed;
+        test_param case_unit;
+        size_t L_NUMBER = it.left_val;
+        size_t R_NUMBER = it.right_val;
+        bool L_CLOSE = it.left_closed;
+        size_t R_CLOSE = it.right_closed;
         if(type == "int")
         {
             case_unit.type = 0;
@@ -46,17 +35,66 @@ void range_type::generate_test_cases()
             case_unit.type = 1;
             case_unit.lf_value = generateRandomDouble(L_NUMBER,L_CLOSE,R_NUMBER,R_CLOSE);
         }
-        case_list.push_back(case_unit);
-        cout<<"执行1次区间分析"<<endl;
+        param_list.push_back(case_unit);
     }
 
-    cout << case_list.size()<<endl;
-    
-    return;   
+        
+    return param_list.size();
 }
 
-void range_type::read_input()
+void range_type::read_line(string str)
 {
+    try{
+
+        if(str.find("range") == string::npos)
+        {
+            throw std::runtime_error("字符串"+str+"没有范围标记");
+        }
+
+        //提取大括号内的内容
+        size_t start = str.find('{');
+        size_t end = str.find('}', start);
+        if (start == string::npos || end == string::npos) {
+            throw std::runtime_error("字符串"+str+"未找到有效的大括号结构");
+        }
+        string content = str.substr(start + 1, end - start - 1);
+
+        //简单判断大括号数量是否异常
+        start = content.find('{');
+        end = content.find('}', start);
+        if (start != string::npos || end != string::npos) {
+            throw std::runtime_error("字符串"+str+"大括号数量异常");
+        }
+        
+        //开始解析
+        size_t colon_pos = content.find(':');
+        if (colon_pos == string::npos) {
+            throw std::runtime_error("字符串"+str+"缺少:分隔符");
+        }
+        
+        // 3. 提取键名
+        string key_part = content.substr(0, colon_pos);
+        string str_name;
+        // 移除双引号（如果有）
+        if (key_part.front() == '"' && key_part.back() == '"') {
+            str_name = key_part.substr(1, key_part.length() - 2);
+        }
+        this->param_name = str_name;
+
+        //更新:标记的位置
+        content = content.substr(colon_pos+1,content.length());
+        colon_pos = content.find(':');
+
+        this->type = trim(content.substr(0, colon_pos));
+
+        string intervals_str = content.substr(colon_pos + 1);
+        ranges = parseIntervals(intervals_str);
+
+    }catch(const exception& e){
+        cerr << "[捕获到exception]" << e.what() << endl;
+        cerr << "程序终止" << endl;
+        exit(1);
+    }
     return;   
 }
 
@@ -169,145 +207,15 @@ double range_type::generateRandomDouble(double left, bool leftClosed, double rig
 
 range_type::range_type(string str)
 {
-    try{
-
-        if(str.find("range") == string::npos)
-        {
-            throw std::runtime_error("字符串"+str+"没有范围标记");
-        }
-
-        //提取大括号内的内容
-        size_t start = str.find('{');
-        size_t end = str.find('}', start);
-        if (start == string::npos || end == string::npos) {
-            throw std::runtime_error("字符串"+str+"未找到有效的大括号结构");
-        }
-        string content = str.substr(start + 1, end - start - 1);
-
-        //简单判断大括号数量是否异常
-        start = content.find('{');
-        end = content.find('}', start);
-        if (start != string::npos || end != string::npos) {
-            throw std::runtime_error("字符串"+str+"大括号数量异常");
-        }
-        
-        //开始解析
-        size_t colon_pos = content.find(':');
-        if (colon_pos == string::npos) {
-            throw std::runtime_error("字符串"+str+"缺少:分隔符");
-        }
-        
-        // 3. 提取键名
-        string key_part = content.substr(0, colon_pos);
-        string str_name;
-        // 移除双引号（如果有）
-        if (key_part.front() == '"' && key_part.back() == '"') {
-            str_name = key_part.substr(1, key_part.length() - 2);
-        }
-        type = str_name;
-
-        //更新:标记的位置
-        content = content.substr(colon_pos+1,content.length());
-        colon_pos = content.find(':');
-
-        string prefix = trim(content.substr(0, colon_pos));
-        string intervals_str = content.substr(colon_pos + 1);
-        ranges = parseIntervals(intervals_str);
-        
-        cout << "string str = \"" << str_name << "\"" << endl;
-        cout << "前缀标记: " << prefix << endl;
-        cout << "有效区间:" << endl;
-        for (const auto &intv : ranges) {
-        cout << (intv.left_closed ? '[' : '(') 
-             << intv.left_val << ", " 
-             << intv.right_val 
-             << (intv.right_closed ? ']' : ')') << endl;
-        }
-        /*
-        // 3. 提取键名
-        string key_part = content.substr(0, colon_pos);
-        string str_name;
-        // 移除双引号（如果有）
-        if (key_part.front() == '"' && key_part.back() == '"') {
-            str_name = key_part.substr(1, key_part.length() - 2);
-        }
-
-        // 处理数值部分
-        vector<size_t> numbers;
-        string values_part = content.substr(colon_pos + 1);
-        
-        // 将逗号替换为空格以便流处理
-        replace(values_part.begin(), values_part.end(), ',', ' ');
-        
-        istringstream iss(values_part);
-        int num;
-        while (iss >> num) {
-            numbers.push_back(num);
-        }
-        input_list = numbers;  //完成处理
-
-        // 输出结果
-        cout << "string str = \"" << str_name << "\"" << endl;
-        cout << "vector<int> = { ";
-        for (int n : numbers) {
-            cout << n << " ";
-        }
-        cout << "}" << endl;*/
-        
-    }catch(const exception& e){
-        cerr << "[捕获到exception]" << e.what() << endl;
-        cerr << "程序终止" << endl;
-        exit(1);
+    read_line(str);  
+    cout << "range_type | \"" << param_name << "\"" << "\t | ";
+    cout << "前缀标记: " << type << "\t | ";
+    cout << "有效区间: ";
+    for (const auto &intv : ranges) {
+    cout << (intv.left_closed ? '[' : '(') 
+         << intv.left_val << ", " 
+         << intv.right_val 
+         << (intv.right_closed ? ']' : ')') << " ";
     }
+    cout<<endl;
 }
-/*
-int main() {
-    // string input = "int:(2,9], (7,12),";
-    string input = "double:(2,9], (7,12),[123,456]";
-    size_t colon_pos = input.find(':');
-    if (colon_pos == string:: npos) {
-        cout << "无效的输入格式" << endl;
-        return 0;
-    }
-----------------
-    string prefix = trim(input.substr(0, colon_pos));
-    string intervals_str = input.substr(colon_pos + 1);
-    vector<Interval> intervals = parseIntervals(intervals_str);
-
-    cout << "前缀标记: " << prefix << endl;
-    cout << "有效区间:" << endl;
-    for (const auto &intv : intervals) {
-        cout << (intv.left_closed ? '[' : '(') 
-             << intv.left_val << ", " 
-             << intv.right_val 
-             << (intv.right_closed ? ']' : ')') << endl;
-    }
-
-    cout << "\n随机数生成结果:" << endl;
-    random_device rd;
-    mt19937 gen(rd());
-    
-    for (const auto &intv : intervals) {
-        if (prefix == "int") {
-            int rand = generateRandomInt(intv.left_val, intv.left_closed, 
-                                       intv.right_val, intv.right_closed);
-            cout << "区间 " 
-                 << (intv.left_closed ? '[' : '(')
-                 << intv.left_val << ", " << intv.right_val
-                 << (intv.right_closed ? ']' : ')')
-                 << " → " << rand << endl;
-        } 
-        else if (prefix == "double") {
-            double rand = generateRandomDouble(intv.left_val, intv.left_closed,
-                                              intv.right_val, intv.right_closed);
-            cout.precision(3);
-            cout << "区间 "
-                 << (intv.left_closed ? '[' : '(')
-                 << intv.left_val << ", " << intv.right_val
-                 << (intv.right_closed ? ']' : ')')
-                 << " → " << fixed << rand << endl;
-        }
-    }
-
-    return 0;
-}*/

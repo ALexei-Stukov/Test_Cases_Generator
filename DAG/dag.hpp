@@ -53,17 +53,11 @@ public:
 
             // 如果出现度为0，输出历史路径
             if (current->children.empty()) {
-                std::cout << "Path to end node (out-degree 0): ";
-                // if(current->value.type == 0)
-                // {
-                //     std::cout << "Path to node " << (current->value).int_value << " (out-degree 0): ";  //因为嵌套的关系，这里不能直接输出value。要么就重载一下运算符，不然就得这样双重嵌套。
-                // }
-                // else
-                // {
-                //     std::cout << "Path to node " << (current->value).lf_value << " (out-degree 0): ";
-                // }
+                // std::cout << "Path to end node (out-degree 0): ";
+                
+                //因为嵌套的关系，这里不能直接输出value。要么就重载一下运算符，不然就得这样双重嵌套。
 
-                for (size_t i = 0; i < current_path.size(); ++i) {
+                for (size_t i = 1; i < current_path.size(); ++i) {
                     // cout<<"(current->value).type is"<<(current->value).type<<std::endl;
                     if((current_path[i]->value).type == 0)
                     {
@@ -73,7 +67,8 @@ public:
                     {
                         std::cout << (current_path[i]->value).lf_value;
                     }
-                    if (i < current_path.size() - 1) std::cout << " -> ";
+                    // if (i < current_path.size() - 1) std::cout << " -> ";
+                    if (i < current_path.size() - 1) std::cout << " ";
                 }
                 std::cout << "\n";
             }

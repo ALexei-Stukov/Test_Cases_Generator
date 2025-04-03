@@ -4,42 +4,24 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
-using std::vector;
-using std::string;
-using std::exception;
-using std::cerr;
-using std::cout;
-using std::istringstream;
-using std::endl;
+using namespace std;
 
-#include "input_type.h"
+#include "basic_param.h"
 
-void enum_type::generate_test_cases()
+int enum_type::generate_test_params()
 {
-    for (auto it = input_list.begin();it < input_list.end();it++)
+    for (auto& it : input_list) 
     {
-        // test_case case_unit;
-        // case_unit.value = *it;
-        // case_unit.name = this->name;
-        // case_list.push_back(case_unit);
-
-        test_case case_unit(name);
-        case_unit.type = 0; //int类型
-        case_unit.int_value = *it;
-        case_list.push_back(case_unit);
+        test_param unit;
+        unit.type = 0; //int类型
+        unit.int_value = it;
+        this->param_list.push_back(unit);
     }
 
-    cout << case_list.size()<<endl;
-    
-    return;   
+    return param_list.size();
 }
 
-void enum_type::read_input()
-{
-    return;   
-}
-
-enum_type::enum_type(string str)
+void enum_type::read_line(string str)
 {
     try{
 
@@ -69,19 +51,20 @@ enum_type::enum_type(string str)
             throw std::runtime_error("字符串"+str+"缺少:分隔符");
         }
 
-        // 3. 提取键名
+        //提取键名
         string key_part = content.substr(0, colon_pos);
         string str_name;
-        // 移除双引号（如果有）
+        //移除双引号（如果有）
         if (key_part.front() == '"' && key_part.back() == '"') {
             str_name = key_part.substr(1, key_part.length() - 2);
         }
+        this->param_name = str_name;
 
-        // 处理数值部分
+        //处理数值部分
         vector<size_t> numbers;
         string values_part = content.substr(colon_pos + 1);
         
-        // 将逗号替换为空格以便流处理
+        //将逗号替换为空格以便流处理
         replace(values_part.begin(), values_part.end(), ',', ' ');
         
         istringstream iss(values_part);
@@ -89,19 +72,24 @@ enum_type::enum_type(string str)
         while (iss >> num) {
             numbers.push_back(num);
         }
-        input_list = numbers;  //完成处理
-
-        // 输出结果
-        cout << "string str = \"" << str_name << "\"" << endl;
-        cout << "vector<int> = { ";
-        for (int n : numbers) {
-            cout << n << " ";
-        }
-        cout << "}" << endl;
-        
+        input_list = numbers;  //完成处理        
     }catch(const exception& e){
         cerr << "[捕获到exception]" << e.what() << endl;
         cerr << "程序终止" << endl;
         exit(1);
     }
+
+    return;   
+}
+
+enum_type::enum_type(string str)
+{
+    read_line(str);
+    //输出结果，尽可能确保在一行内完成
+    cout << "enum_type | \"" << param_name << "\""<<"\t| ";
+    cout << "vector<int> = { ";
+    for (int n : this->input_list) {
+        cout << n << " ";
+    }
+    cout << "}" << endl;
 }
