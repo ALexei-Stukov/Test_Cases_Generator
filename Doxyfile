@@ -1,0 +1,44 @@
+# 项目基本信息
+PROJECT_NAME           = "您的项目名称"
+PROJECT_NUMBER        = 1.0.0
+PROJECT_BRIEF         = "项目简短描述"
+OUTPUT_DIRECTORY      = doc
+
+# 输入设置
+INPUT                 = src
+INPUT_ENCODING        = UTF-8
+FILE_PATTERNS        = *.cpp *.h *.hpp
+RECURSIVE            = YES
+
+# 输出设置
+GENERATE_HTML         = YES
+GENERATE_LATEX        = NO
+HTML_OUTPUT          = html
+GENERATE_TREEVIEW    = YES
+
+# 提取设置
+EXTRACT_ALL          = YES
+EXTRACT_PRIVATE      = YES
+EXTRACT_STATIC       = YES
+
+# 语言设置
+OUTPUT_LANGUAGE      = Chinese
+OPTIMIZE_OUTPUT_FOR_C = YES
+
+# 图形设置
+HAVE_DOT             = YES
+UML_LOOK             = YES
+CALL_GRAPH           = YES
+CALLER_GRAPH         = YES
+
+# 源代码设置
+SOURCE_BROWSER       = YES
+INLINE_SOURCES       = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION  = YES
+
+# 其他设置
+QUIET                = NO
+WARNINGS            = YES
+WARN_IF_UNDOCUMENTED = YES
+WARN_IF_DOC_ERROR   = YES

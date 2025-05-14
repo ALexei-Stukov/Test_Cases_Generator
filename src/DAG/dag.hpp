@@ -56,12 +56,13 @@ public:
                 // std::cout << "Path to end node (out-degree 0): ";
                 
                 //因为嵌套的关系，这里不能直接输出value。要么就重载一下运算符，不然就得这样双重嵌套。
-
+                //不需要输出虚拟根节点，所以index从1开始。
                 for (size_t i = 1; i < current_path.size(); ++i) {
-                    // cout<<"(current->value).type is"<<(current->value).type<<std::endl;
+                    // cout<<"(current_path[i]->value).type is"<<(current_path[i]->value).type<<std::endl;
                     if((current_path[i]->value).type == 0)
                     {
                         std::cout << (current_path[i]->value).int_value;
+                        // std::cout << "branch A "<<(current_path[i]->value).int_value;
                     }
                     else
                     {

@@ -10,6 +10,17 @@ using std::cout;
 #include "basic_param.h"
 #include "dag.hpp"
 
+using namespace TEST_CASE_GENERATOR;
+
+/** 
+ * @file generator.cpp 
+ * @brief 主文件文档（文件级文档会生成独立链接） 
+ */
+
+
+/**
+* @brief 主函数示例
+*/
 int main(int argc,char**argv)
 {
     if(argc < 2)

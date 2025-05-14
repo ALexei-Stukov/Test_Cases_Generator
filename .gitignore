@@ -1,2 +1,9 @@
 *.txt
 *.bin
+*.o
+*.out
+
+html/
+build/
+latex/
+pdf/

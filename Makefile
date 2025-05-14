@@ -1,6 +1,16 @@
-build:generator.cpp enum_type.cpp range_type.cpp
-	g++ -o generator.bin $^ -I./DAG/
+all:generator doc
+
+generator:
+	mkdir -p build
+	cd src; make build; cd ..
+	cp ./src/*.bin ./build
+	cp ./src/input_file ./build
+
 run:
-	./generator.bin input_file
+	cd src; make run; cd ..
+	
+doc:
+	doxygen Doxyfile
 clean:
-	rm ./*.bin
+	rm ./build -rf
+	rm ./doc/ -rf
