@@ -2,7 +2,7 @@
 #define INTERVAL
 
 #include <vector>
-namespace TEST_CASE_GENERATOR{
+namespace TEST_CASES_GENERATOR{
     using std::vector;
     
     //区间类型
@@ -27,7 +27,7 @@ namespace TEST_CASE_GENERATOR{
         double getRightVal() const;
         void setRightVal(double val);
 
-        // 区间取反（相对于全体实数范围）,将产生2个区间。
+        // 区间取反（相对于全体实数范围）,将产生1或2个区间。
         vector<Interval> invert();
 
         //区间内随机数生成，可以生成int型或者double型

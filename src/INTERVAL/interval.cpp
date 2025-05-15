@@ -1,9 +1,9 @@
 #include "interval.h"
-#include <cfloat>   //for DBL_MAX and DBL_MIN
+// #include <cfloat>   //for DBL_MAX and DBL_MIN
 #include <algorithm>  // For std::swap
 #include <random>
 #include <iostream>
-namespace TEST_CASE_GENERATOR
+namespace TEST_CASES_GENERATOR
 {
     using std::swap;
     using std::random_device;
@@ -14,11 +14,11 @@ namespace TEST_CASE_GENERATOR
 
     Interval::Interval()
     {
-        left_closed = true;
-        right_closed = true;
+        left_closed = false;
+        right_closed = false;
         left_val = numeric_limits<double>::lowest(); //最小double值
         right_val = numeric_limits<double>::max();    //最大double值
-        std::cout<<"what?? "<<left_val<<" "<<right_val<<std::endl;
+        // std::cout<<"what?? "<<left_val<<" "<<right_val<<std::endl;
     }
 
     //检查区间是否合法
@@ -52,19 +52,29 @@ namespace TEST_CASE_GENERATOR
         vector<Interval> ret;
         Interval left_to_min;
         // [DBL_MIN,left_value) or [DBL_MIN,left_value] 
-        left_to_min.setLeftClosed(true);
-        left_to_min.setLeftVal(DBL_MIN);
+        left_to_min.setLeftClosed(false);
+        left_to_min.setLeftVal(numeric_limits<double>::lowest());
+
         left_to_min.setRightClosed( !(this->isLeftClosed()) );
         left_to_min.setRightVal( this->getLeftVal() );
-        ret.push_back(left_to_min);
+        // remove the [DBL_MIN,DBL_MIN]
+        if(left_to_min.isValid())
+        {
+            ret.push_back(left_to_min);
+        }
 
         Interval right_to_max;
         // (right_value,DBL_MAX] or [right_value,DBL_MAX] 
-        right_to_max.setRightClosed(true);
-        right_to_max.setRightVal(DBL_MAX);
+        right_to_max.setRightClosed(false);
+        right_to_max.setRightVal(numeric_limits<double>::max());
+
         right_to_max.setLeftClosed( !(this->isRightClosed()) );
         right_to_max.setLeftVal( this->getRightVal() );
-        ret.push_back(right_to_max);
+ 
+        if(right_to_max.isValid())
+        {
+            ret.push_back(right_to_max);
+        }
 
         return ret;
     }
@@ -102,7 +112,7 @@ namespace TEST_CASE_GENERATOR
         long long int offset = is_left ? +1 : -1;
         bool is_closed = is_left ? left_closed : right_closed;
         double target_value = is_left ? left_val : right_val;
-        std::cout<<"the real target_value is "<<target_value<<std::endl;
+        // std::cout<<"the real target_value is "<<target_value<<std::endl;
         if( is_closed )
         {
             return (long long int)target_value;

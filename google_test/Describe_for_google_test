@@ -1,0 +1,14 @@
+The project use googletest to check something.
+
+the version(or commit) of googletest is:
+
+commit 9f79a9597ad9b5394e5c620ebf76824f77ffbde4 (HEAD -> main, origin/main, origin/HEAD)
+Author: Mike Kruskal <mkruskal@google.com>
+Date:   Tue May 13 18:25:24 2025 -0700
+
+    Add [[nodiscard]] to GetParam() to prevent accidental misuse.
+    
+    This helps avoid a situation where someone sets up a parameterized test but forgets to actually use the parameter.
+    
+    PiperOrigin-RevId: 758455362
+    Change-Id: Ie4db03e82b6a4e1787be96f154b3fbb25657ae64

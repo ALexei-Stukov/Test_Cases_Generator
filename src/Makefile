@@ -1,6 +1,6 @@
 BIN=g++
 CPP=g++ -c
-INCLUDE=-I./DAG/
+INCLUDE=-I./DAG/ -I./INTERVAL/
 OBJ=generator.o interval.o enum_type.o range_type.o
 
 build:$(OBJ)
