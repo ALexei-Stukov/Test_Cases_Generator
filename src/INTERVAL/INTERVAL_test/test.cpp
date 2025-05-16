@@ -8,30 +8,30 @@ namespace {
 /*
   add test on here
 
-  TEST( Session_name , topic_name ) {
+  TEST( session_name , topic_name ) { // "session_name" can't be a class name
 
     //use some assert to test something
   
   }
 
 */
-  TEST(build_and_check_isValid, normal) {
-    EXPECT_EQ(true, build_and_check_isValid());
+  TEST(INTERVAL_test, build_and_check_is_valid) {
+    EXPECT_EQ(true, build_and_check_is_valid());
   }
 
-  TEST(set_close, normal) {
+  TEST(INTERVAL_test, set_close) {
     EXPECT_EQ(true, set_close());
   }
 
-  TEST(invert, normal) {
+  TEST(INTERVAL_test, invert) {
     EXPECT_EQ(true, invert());
   }
   
-  TEST(random_in_range, normal) {
+  TEST(INTERVAL_test, random_in_range) {
     EXPECT_EQ(true, random_in_range());
   }
   
-  TEST(critical_random_in_range, normal) {
+  TEST(INTERVAL_test, critical_random_in_range) {
     EXPECT_EQ(true, critical_random_in_range());
   }
 

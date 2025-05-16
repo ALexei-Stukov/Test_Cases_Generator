@@ -4,7 +4,7 @@
 #define GOOGLETEST_SAMPLES_SAMPLE1_H_
 
     //构造（包括初始化）并检测区间是否合法
-    bool build_and_check_isValid();
+    bool build_and_check_is_valid();
     
     //设置开闭类型并正确生效
     bool set_close();
